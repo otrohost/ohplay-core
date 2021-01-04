@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::resources([
+    'titles' => TitleController::class,
+    'users' => UserController::class,
+    'users/times' => TimeController::class,
+    'users/subscriptions' => SubscriptionController::class,
+    'access_auth' => AccessController::class
+]);
+
+Route::post('/users/login/', 'UserController@login');
+Route::post('/users/logout/{id}', 'UserController@logout');
+Route::put('/users/password/{email}', 'UserController@password');
+
+
+
