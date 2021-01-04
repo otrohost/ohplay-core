@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TitleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::resources([
     'titles' => TitleController::class,
-    'users' => UserController::class,
-    'users/times' => TimeController::class,
-    'users/subscriptions' => SubscriptionController::class,
-    'access_auth' => AccessController::class
+    // 'users' => UserController::class,
+    // 'users/times' => TimeController::class,
+    // 'users/subscriptions' => SubscriptionController::class,
+    // 'access_auth' => AccessController::class
 ]);
 
-Route::post('/users/login/', 'UserController@login');
-Route::post('/users/logout/{id}', 'UserController@logout');
-Route::put('/users/password/{email}', 'UserController@password');
+// Route::post('/users/login/', 'UserController@login');
+// Route::post('/users/logout/{id}', 'UserController@logout');
+// Route::put('/users/password/{email}', 'UserController@password');
 
 
 
