@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTitleGenresTable extends Migration
+class CreateTitlesGenresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTitleGenresTable extends Migration
      */
     public function up()
     {
-        Schema::create('title_genres', function (Blueprint $table) {
+        Schema::create('titles_genres', function (Blueprint $table) {
             $table->id();
             $table->foreignId('genre_id')->constrained();
             $table->foreignId('title_id')->constrained();
@@ -28,6 +28,6 @@ class CreateTitleGenresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('title_genres');
+        Schema::dropIfExists('titles_genres');
     }
 }

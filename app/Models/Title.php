@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Title extends Model
 {
+    protected $hidden = ['created_at', 'updated_at'];
+
     public function translations()
     {
         return $this->hasMany(TitleTranslation::class);
@@ -14,7 +16,7 @@ class Title extends Model
 
     public function genres()
     {
-        return $this->hasMany(Genre::class);
+        return $this->belongsToMany(Genre::class, 'titles_genres')->withPivot('title_id', 'genre_id');
     }
 
     public function contents()
@@ -24,7 +26,7 @@ class Title extends Model
 
     public function people()
     {
-        return $this->hasMany(Person::class);
+        return $this->belongsToMany(Person::class, 'titles_people')->withPivot('title_id', 'person_id');
     }
 
     public function meta()

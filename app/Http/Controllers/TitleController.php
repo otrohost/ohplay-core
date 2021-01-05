@@ -4,6 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Title;
+
+use App\Http\Resources\TitleCollection;
+
+use App\Http\Resources\TitleResource;
+
+
 class TitleController extends Controller
 {
     /**
@@ -12,8 +19,9 @@ class TitleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+        return new TitleCollection( Title::paginate() );
+        //return count(Title::all());
     }
 
     /**
@@ -35,7 +43,7 @@ class TitleController extends Controller
      */
     public function show($id)
     {
-        //
+        return new TitleResource( Title::findOrFail($id) );
     }
 
     /**
