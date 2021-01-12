@@ -16,7 +16,8 @@ class CreateGenresTable extends Migration
         Schema::create('genres', function (Blueprint $table) {
             $table->id();
             $table->integer('tmdb_id');
-            $table->string('name');
+            $table->unsignedBigInteger('name');
+            $table->foreign('name')->references('id')->on('translations');
             $table->timestamps();
         });
     }

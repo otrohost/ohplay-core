@@ -21,7 +21,6 @@ class TitleController extends Controller
     public function index()
     {   
         return new TitleCollection( Title::paginate() );
-        //return count(Title::all());
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TitlesTranslations extends Migration
+class Translations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class TitlesTranslations extends Migration
      */
     public function up()
     {
-        Schema::create('titles_translations', function (Blueprint $table) {
+        Schema::create('translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('title_id')->constrained();
-            $table->string('lang_code');
-            $table->string('meta_key');
-            $table->string('meta_value');
-            $table->timestamps();
+            $table->string('spa', 500);
+            $table->string('eng', 500);
+            $table->string('por', 500);
         });
     }
 
@@ -30,6 +28,6 @@ class TitlesTranslations extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('titles_translations');
+        Schema::dropIfExists('translations');
     }
 }

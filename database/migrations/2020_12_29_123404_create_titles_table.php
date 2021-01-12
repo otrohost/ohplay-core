@@ -15,10 +15,15 @@ class CreateTitlesTable extends Migration
     {
         Schema::create('titles', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->unsignedBigInteger('title');
+            $table->foreign('title')->references('id')->on('translations');
+            $table->unsignedBigInteger('sinopsis');
+            $table->foreign('sinopsis')->references('id')->on('translations');
             $table->integer('tmdb_id');
-            $table->string('cover');
-            $table->string('type');
+            $table->integer('year');
+            $table->string('cover_horizontal', 200);
+            $table->string('cover_vertical', 200);
+            $table->string('type', 10);
             $table->timestamps();
         });
     }

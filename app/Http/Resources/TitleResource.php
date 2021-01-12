@@ -60,6 +60,7 @@ class TitleResource extends JsonResource
                     }
 
                     array_push($contents, [
+                        'content_id' => $content->id,
                         'content_uri' => $content->source,
                         'contents_meta' => $contentsmeta
                     ]);
