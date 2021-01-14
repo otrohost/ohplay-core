@@ -10,7 +10,6 @@ use App\Http\Resources\TitleCollection;
 
 use App\Http\Resources\TitleResource;
 
-
 class TitleController extends Controller
 {
     /**
@@ -20,7 +19,14 @@ class TitleController extends Controller
      */
     public function index()
     {   
-        return new TitleCollection( Title::paginate() );
+        $collection = new TitleCollection();
+        return $collection->show();
+    }
+
+    public function TitlesAsGenre($id)
+    {
+        $collection = new TitleCollection();
+        return $collection->showAsGenre($id);
     }
 
     /**

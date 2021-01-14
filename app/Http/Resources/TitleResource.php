@@ -13,8 +13,6 @@ class TitleResource extends JsonResource
      * @return array
      */
 
-    public static $wrap = 'title';
-
     public function toArray($request)
     {
         $genres = [];
@@ -80,13 +78,15 @@ class TitleResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
-            'title' => $this->title,
-            'cover' => $this->cover,
+            'title' => $this->translation($this->title,"spa"),
+            'sinopsis' => $this->translation($this->sinopsis,"spa"),
+            'cover_horizontal' => $this->cover_horizontal,
             'TMDB' => $this->tmdb_id,
             'genres' => $genres,
             'people' => $people,
             'titles_meta' => $titlesmeta,
             'contents' => $contents
         ];
+
     }
 }

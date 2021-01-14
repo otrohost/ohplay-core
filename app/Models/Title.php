@@ -4,15 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Title extends Model
 {
     protected $hidden = ['created_at', 'updated_at'];
-
-    public function translations()
-    {
-        return $this->hasMany(TitleTranslation::class);
-    }
 
     public function genres()
     {
@@ -29,8 +25,8 @@ class Title extends Model
         return $this->belongsToMany(Person::class, 'titles_people')->withPivot('title_id', 'person_id');
     }
 
-    public function meta()
+    public function translation($id,$lang)
     {
-        return $this->hasMany(TitleMeta::class);
+        return Translation::find($id)->$lang;
     }
 }

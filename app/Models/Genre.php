@@ -11,4 +11,9 @@ class Genre extends Model
     {
         return $this->belongsToMany(Title::class, 'titles_genres')->withPivot('genre_id', 'title_id');
     }
+
+    public function translations()
+    {
+        return $this->hasMany(Translation::class);
+    }
 }
