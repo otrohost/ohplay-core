@@ -9,6 +9,7 @@ use DB;
 class Title extends Model
 {
     protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = ['title', 'sinopsis', 'tmdb_id', 'year', 'cover_horizontal', 'cover_vertical', 'type'];   
 
     public function genres()
     {
@@ -28,5 +29,32 @@ class Title extends Model
     public function translation($id,$lang)
     {
         return Translation::find($id)->$lang;
+    }
+
+    public function saveTitle($request)
+    {
+        $translation = new Translation();
+        $genre = new Genre();
+
+        $genres = [1];
+        
+        $title = Title::create(
+            [
+                'title' => $translation->createTranslation('spa', 'eng', 'por'),
+                'sinopsis' => $translation->createTranslation('spa', 'eng', 'por'),
+                'tmdb_id' => 2112,
+                'year' => 2020,
+                'cover_horizontal' => 'cover.jpg',
+                'cover_vertical' => 'cover.jpg',
+                'type' => 'movie'
+            ]
+        );
+
+        foreach($genres as $genre_tmdb)
+        {
+            $title->genres()->save($genre->findOrCreateGenre($genre_tmdb));
+        }
+
+        return $title->id;
     }
 }

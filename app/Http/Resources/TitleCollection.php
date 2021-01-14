@@ -21,7 +21,7 @@ class TitleCollection
         return DB::table('titles')
         ->inRandomOrder()
         ->join('translations as title', 'titles.title', '=', 'title.id')
-        ->select('titles.id', 'spa as title', 'cover_horizontal', 'cover_vertical')
+        ->select('titles.id', 'title.spa as title', 'cover_horizontal', 'cover_vertical')
         ->paginate()->toArray();
     }
 

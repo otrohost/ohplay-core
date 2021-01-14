@@ -37,7 +37,8 @@ class TitleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $title = new Title();
+        $title->saveTitle($request);
     }
 
     /**
