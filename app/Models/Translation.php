@@ -10,13 +10,13 @@ class Translation extends Model
     public $timestamps = false;
     protected $fillable = ['spa', 'eng', 'por'];
 
-    public function createTranslation($spa, $eng, $por)
+    public function createTranslation($languages)
     {
         $translation = Translation::create(
             [
-                'spa' => $spa,
-                'eng' => $eng,
-                'por' => $por
+                'spa' => $languages[0],
+                'eng' => $languages[1],
+                'por' => $languages[2]
             ]
         );
 

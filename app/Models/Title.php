@@ -35,26 +35,32 @@ class Title extends Model
     {
         $translation = new Translation();
         $genre = new Genre();
+        $tmdb_api = new TMDBAPI();
 
-        $genres = [1];
-        
+        $languages = ["es", "en", "pt"];
+        $tmdb_id = $request["tmdb_id"];
+        $type = $request["type"];
+
+        $tmdb_content = $tmdb_api->title($tmdb_id, $type, $languages);
+
+        $genres = $tmdb_content['genres'];
+
         $title = Title::create(
             [
-                'title' => $translation->createTranslation('spa', 'eng', 'por'),
-                'sinopsis' => $translation->createTranslation('spa', 'eng', 'por'),
-                'tmdb_id' => 2112,
-                'year' => 2020,
-                'cover_horizontal' => 'cover.jpg',
-                'cover_vertical' => 'cover.jpg',
-                'type' => 'movie'
+                'title' => $translation->createTranslation($tmdb_content["titles"]),
+                'sinopsis' => $translation->createTranslation($tmdb_content["descriptions"]),
+                'tmdb_id' => $tmdb_content["tmdb_id"],
+                'year' => $tmdb_content["year"],
+                'cover_horizontal' => $tmdb_content["backdrop"],
+                'cover_vertical' => $tmdb_content["poster"],
+                'type' => $type
             ]
         );
 
         foreach($genres as $genre_tmdb)
-        {
-            $title->genres()->save($genre->findOrCreateGenre($genre_tmdb));
+        {   
+            $title->genres()->save($genre->findOrCreateGenre($genre_tmdb['id'], $languages));
         }
 
-        return $title->id;
     }
 }

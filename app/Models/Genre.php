@@ -19,7 +19,7 @@ class Genre extends Model
         return $this->hasMany(Translation::class);
     }
 
-    public function findOrCreateGenre($tmdb_id)
+    public function findOrCreateGenre($tmdb_id, $languages)
     {
         $genre = Genre::where('tmdb_id', '=', $tmdb_id)->first();
         if ($genre !== null)
@@ -29,10 +29,12 @@ class Genre extends Model
         else
         {
             $translation = new Translation();
+            $tmdb_api = new TMDBApi();
+            $genre = $tmdb_api->genre($tmdb_id, $languages);
             return Genre::create(
                 [
                     'tmdb_id' => $tmdb_id,
-                    'name' => $translation->createTranslation('Género', 'Genre', 'Generillo')
+                    'name' => $translation->createTranslation($genre)
                 ]
             );
         }
