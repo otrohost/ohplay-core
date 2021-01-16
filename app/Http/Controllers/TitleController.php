@@ -19,14 +19,15 @@ class TitleController extends ApiController
      */
     public function index()
     {   
-        $collection = new TitleCollection();
-        if ($collection->show()['status_code'])
+        $title = new TitleCollection();
+        $response = $title->show();
+        if ($response['status_code'])
         {
-            return $this->successResponse($collection->show()['response'], $collection->show()['message']);
+            return $this->successResponse($response['response'], $response['message']);
         }
         else
         {
-            return $this->errorResponse(400, $collection->show()['message']);
+            return $this->errorResponse($response['http_code'], $response['message']);
         }
     }
 
@@ -52,7 +53,17 @@ class TitleController extends ApiController
     public function store(Request $request)
     {
         $title = new Title();
-        return $title->saveTitle($request);
+        $response = $title->saveTitle($request);
+
+        if ($response['status_code'])
+        {
+            return $this->successResponse([], $response['message'], $response['http_code']);
+        }
+        else
+        {
+            return $this->errorResponse($response['http_code'], $response['message']);
+        }
+
     }
 
     /**
