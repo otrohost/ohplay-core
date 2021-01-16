@@ -23,7 +23,7 @@ Route::resources([
     // 'access_auth' => AccessController::class
 ]);
 
-Route::get('/titles/genre/{genre_id}', [TitleController::class, 'TitlesAsGenre']);
+Route::get('/titles/genre/{genre_id}', [TitleController::class, 'indexAsGenre']);
 
 // Route::post('/users/login/', 'UserController@login');
 // Route::post('/users/logout/{id}', 'UserController@logout');

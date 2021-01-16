@@ -20,13 +20,27 @@ class TitleController extends ApiController
     public function index()
     {   
         $collection = new TitleCollection();
-        return $this->successResponse($collection->show());
+        if ($collection->show()['status_code'])
+        {
+            return $this->successResponse($collection->show()['response'], $collection->show()['message']);
+        }
+        else
+        {
+            return $this->errorResponse(400, $collection->show()['message']);
+        }
     }
 
-    public function TitlesAsGenre($id)
+    public function indexAsGenre($id)
     {
         $collection = new TitleCollection();
-        return $collection->showAsGenre($id);
+        if ($collection->showAsGenre($id)['status_code'])
+        {
+            return $this->successResponse($collection->showAsGenre($id)['response'], $collection->showAsGenre($id)['message']);
+        }
+        else
+        {
+            return $this->errorResponse(400, $collection->showAsGenre($id)['message']);
+        }
     }
 
     /**
