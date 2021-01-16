@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TitleController;
+use App\Http\Controllers\ApiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +26,9 @@ Route::resources([
 ]);
 
 Route::get('/titles/genre/{genre_id}', [TitleController::class, 'indexAsGenre']);
+
+//404 routes
+Route::fallback([ApiController::class, 'notFound']);
 
 // Route::post('/users/login/', 'UserController@login');
 // Route::post('/users/logout/{id}', 'UserController@logout');
