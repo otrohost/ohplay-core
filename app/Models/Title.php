@@ -41,8 +41,6 @@ class Title extends Model
         $tmdb_id = $request["tmdb_id"];
         $type = $request["type"];
 
-        $genres = $tmdb_content['genres'];
-
         //comprove if title already exists
         if(Title::where('tmdb_id', '=', $tmdb_id)->first() !== null)
         {
@@ -54,6 +52,7 @@ class Title extends Model
         {
             //obtain data from TMDB
             $tmdb_content = $tmdb_api->title($tmdb_id, $type, $languages);
+            $genres = $tmdb_content['genres'];
             $title = Title::create(
                 [
                     'title' => $translation->createTranslation($tmdb_content["titles"]),
@@ -80,5 +79,39 @@ class Title extends Model
             'http_code' => $http_code,
             'message' => $message
         ];
+    }
+
+    public function removeTitle($request)
+    {
+        $title = Title::where('tmdb_id', '=', $request)->first();
+        $translation = new Translation();
+
+        //comprove if title exists before deleting
+        if($title !== null)
+        {
+            //remove title and genre relations
+            $title->genres()->detach();
+            $title->delete();
+
+            //remove translations
+            $translation->removeTranslation($title['title']);
+            $translation->removeTranslation($title['sinopsis']);
+            
+            $status_code = 1;
+            $http_code = 200;
+            $message = "The title has been deleted successfully";
+        }
+        else
+        {
+            $status_code = 0;
+            $http_code = 404;
+            $message = "The title you're trying to delete doesn't exist";
+        }
+
+        return [
+            'status_code' => $status_code,
+            'http_code' => $http_code,
+            'message' => $message
+        ]; 
     }
 }

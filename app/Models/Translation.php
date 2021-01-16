@@ -22,4 +22,10 @@ class Translation extends Model
 
         return $translation->id;
     }
+
+    public function removeTranslation($id)
+    {
+        $translation = Translation::where('id', '=', $id)->first();
+        return $translation->delete();
+    }
 }

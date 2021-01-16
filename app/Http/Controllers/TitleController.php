@@ -97,6 +97,16 @@ class TitleController extends ApiController
      */
     public function destroy($id)
     {
-        //
+        $title = new Title();
+        $response = $title->removeTitle($id);
+
+        if($response['status_code'])
+        {
+            return $this->successResponse([], $response['message'], $response['http_code']);   
+        }
+        else
+        {
+            return $this->errorResponse($response['http_code'], $response['message']);
+        }
     }
 }
