@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Title;
-
 use App\Http\Resources\TitleCollection;
-
 use App\Http\Resources\TitleResource;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TitleController extends ApiController
 {
@@ -71,9 +69,16 @@ class TitleController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        return new TitleResource( Title::findOrFail($id) );
+    public function show($request)
+    {  
+        try{
+            $response = Title::findOrFail($id);
+            return $this->successResponse($response, "Title retrieved correctly");
+        }
+        catch(ModelNotFoundException $e)
+        {
+            return $this->errorResponse(404, "The title you asked for doesn't exist");
+        }
     }
 
     /**
