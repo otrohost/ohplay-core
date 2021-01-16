@@ -10,7 +10,7 @@ use App\Http\Resources\TitleCollection;
 
 use App\Http\Resources\TitleResource;
 
-class TitleController extends Controller
+class TitleController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class TitleController extends Controller
     public function index()
     {   
         $collection = new TitleCollection();
-        return $collection->show();
+        return $this->successResponse($collection->show());
     }
 
     public function TitlesAsGenre($id)
