@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Models\Translation;
+
 class TitleResource extends JsonResource
 {
     /**
@@ -19,14 +21,14 @@ class TitleResource extends JsonResource
         $people = [];
         $contents = [];
         $titlesmeta = [];
+        $translation = new Translation();
 
         if(isset($this->genres)){
             foreach ($this->genres as $genre)
             {
                 array_push($genres, [
                     'genre_id' => $genre->id,
-                    'genre_tmdbid' => 3234,
-                    'genre_title' =>  $genre->name
+                    'genre_title' =>  $translation->findTranslation($genre->name,"spa")
                 ]);
             }
         }
@@ -78,8 +80,8 @@ class TitleResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
-            'title' => $this->translation($this->title,"spa"),
-            'sinopsis' => $this->translation($this->sinopsis,"spa"),
+            'title' => $translation->findTranslation($this->title,"spa"),
+            'sinopsis' => $translation->findTranslation($this->sinopsis,"spa"),
             'cover_horizontal' => $this->cover_horizontal,
             'TMDB' => $this->tmdb_id,
             'genres' => $genres,

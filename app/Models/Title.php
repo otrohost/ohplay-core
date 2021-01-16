@@ -26,11 +26,6 @@ class Title extends Model
         return $this->belongsToMany(Person::class, 'titles_people')->withPivot('title_id', 'person_id');
     }
 
-    public function translation($id,$lang)
-    {
-        return Translation::find($id)->$lang;
-    }
-
     public function existsTitle($id)
     {
         $title = Title::where('tmdb_id', '=', $id)->first();

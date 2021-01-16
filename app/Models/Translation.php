@@ -10,6 +10,11 @@ class Translation extends Model
     public $timestamps = false;
     protected $fillable = ['spa', 'eng', 'por'];
 
+    public function findTranslation($id, $lang)
+    {
+        return Translation::find($id)->$lang;
+    }
+
     public function createTranslation($languages)
     {
         $translation = Translation::create(

@@ -69,10 +69,10 @@ class TitleController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($request)
+    public function show($id)
     {  
         try{
-            $response = Title::findOrFail($id);
+            $response = new TitleResource(Title::findOrFail($id));
             return $this->successResponse($response, "Title retrieved correctly");
         }
         catch(ModelNotFoundException $e)
