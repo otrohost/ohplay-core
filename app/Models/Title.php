@@ -31,18 +31,30 @@ class Title extends Model
         return Translation::find($id)->$lang;
     }
 
-    public function saveTitle($request)
+    public function existsTitle($id)
+    {
+        $title = Title::where('tmdb_id', '=', $id)->first();
+        if($title !== null){
+            return $title;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public function saveTitle($tmdb_id, $type)
     {
         $translation = new Translation();
         $genre = new Genre();
         $tmdb_api = new TMDBAPI();
 
         $languages = ["es", "en", "pt"];
-        $tmdb_id = $request["tmdb_id"];
-        $type = $request["type"];
+
+        $title = $this->existsTitle($tmdb_id);
 
         //comprove if title already exists
-        if(Title::where('tmdb_id', '=', $tmdb_id)->first() !== null)
+        if($title)
         {
             $status_code = 0;
             $http_code = 409;
@@ -81,13 +93,14 @@ class Title extends Model
         ];
     }
 
-    public function removeTitle($request)
+
+    public function removeTitle($tmdb_id)
     {
-        $title = Title::where('tmdb_id', '=', $request)->first();
+        $title = $this->existsTitle($tmdb_id);
         $translation = new Translation();
 
         //comprove if title exists before deleting
-        if($title !== null)
+        if($title)
         {
             //remove title and genre relations
             $title->genres()->detach();
@@ -113,5 +126,28 @@ class Title extends Model
             'http_code' => $http_code,
             'message' => $message
         ]; 
+    }
+
+    public function updateTitle($tmdb_id, $type)
+    {
+        $title = $this->existsTitle($tmdb_id);
+        if($title) {
+            $this->removeTitle($tmdb_id);
+            $this->saveTitle($tmdb_id, $type);
+            $status_code = 1;
+            $http_code = 200;
+            $message = "The title has been edited successfully";
+        }
+        else {
+            $status_code = 0;
+            $http_code = 404;
+            $message = "The title you're trying to edit doesn't exist";
+        }
+
+        return [
+            'status_code' => $status_code,
+            'http_code' => $http_code,
+            'message' => $message
+        ];         
     }
 }

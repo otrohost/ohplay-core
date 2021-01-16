@@ -53,7 +53,7 @@ class TitleController extends ApiController
     public function store(Request $request)
     {
         $title = new Title();
-        $response = $title->saveTitle($request);
+        $response = $title->saveTitle($request["tmdb_id"], $request["type"]);
 
         if ($response['status_code'])
         {
@@ -63,7 +63,6 @@ class TitleController extends ApiController
         {
             return $this->errorResponse($response['http_code'], $response['message']);
         }
-
     }
 
     /**
@@ -86,7 +85,17 @@ class TitleController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+        $title = new Title();
+        $response = $title->updateTitle($request["tmdb_id"], $request["type"]);
+
+        if ($response['status_code'])
+        {
+            return $this->successResponse([], $response['message'], $response['http_code']);
+        }
+        else
+        {
+            return $this->errorResponse($response['http_code'], $response['message']);
+        }
     }
 
     /**
