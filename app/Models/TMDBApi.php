@@ -27,7 +27,7 @@ class TMDBApi extends Model
             $backdrop = $content['backdrop_path'];
             $tmdb_id = $content['id'];
             $genres = $content['genres'];
-            $year = 2008;
+            $year = explode('-', ''.$content['release_date'].'')[0];
         }
 
         return [
