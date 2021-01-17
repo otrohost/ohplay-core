@@ -19,6 +19,7 @@ use App\Http\Controllers\ApiController;
 
 Route::resources([
     'titles' => TitleController::class,
+    'titles/contents' => ContentController::class,
     // 'users' => UserController::class,
     // 'users/times' => TimeController::class,
     // 'users/subscriptions' => SubscriptionController::class,
