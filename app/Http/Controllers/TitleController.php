@@ -17,8 +17,10 @@ class TitleController extends ApiController
      */
     public function index()
     {   
+        $language = $this->language();
         $title = new TitleCollection();
-        $response = $title->show();
+        $response = $title->show($language);
+
         if ($response['status_code'])
         {
             return $this->successResponse($response['response'], $response['message']);
@@ -31,14 +33,16 @@ class TitleController extends ApiController
 
     public function indexAsGenre($id)
     {
-        $collection = new TitleCollection();
-        if ($collection->showAsGenre($id)['status_code'])
+        $language = $this->language();
+        $title = new TitleCollection();
+        $response = $title->showAsGenre($id, $language);
+        if ($response['status_code'])
         {
-            return $this->successResponse($collection->showAsGenre($id)['response'], $collection->showAsGenre($id)['message']);
+            return $this->successResponse($response['response'], $response['message']);
         }
         else
         {
-            return $this->errorResponse(400, $collection->showAsGenre($id)['message']);
+            return $this->errorResponse(400, $response['message']);
         }
     }
 
@@ -71,8 +75,9 @@ class TitleController extends ApiController
      */
     public function show($id)
     {  
+        $language = $this->language();
         try{
-            $response = new TitleResource(Title::findOrFail($id));
+            $response = new TitleResource(Title::findOrFail($id), $language);
             return $this->successResponse($response, "Title retrieved correctly");
         }
         catch(ModelNotFoundException $e)

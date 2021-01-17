@@ -14,15 +14,13 @@ class TitleCollection
      * @return array
      */
 
-    public static $wrap = 'titles';
-
-    public function show()
+    public function show($language)
     {
         try {
             $response = DB::table('titles')
             ->inRandomOrder()
             ->join('translations as title', 'titles.title', '=', 'title.id')
-            ->select('titles.id', 'title.spa as title', 'cover_horizontal', 'cover_vertical')
+            ->select('titles.id', 'title.'.$language.' as title', 'cover_horizontal', 'cover_vertical')
             ->paginate()->toArray();
             $message = "Titles retrieved correctly.";
             $status_code = 1;
@@ -39,7 +37,7 @@ class TitleCollection
         ];
     }
 
-    public function showAsGenre($id)
+    public function showAsGenre($id, $language)
     {
         try {
             $response = DB::table('titles')
@@ -49,7 +47,7 @@ class TitleCollection
             ->join('translations as title', 'titles.title', '=', 'title.id')
             ->join('translations as genre', 'genres.name', '=', 'genre.id')
             ->where('genre_id', '=', $id)
-            ->select('titles.id', 'title.spa as title', 'genre.spa as genre', 'cover_horizontal', 'cover_vertical')
+            ->select('titles.id', 'title.'.$language.' as title', 'genre.'.$language.' as genre', 'cover_horizontal', 'cover_vertical')
             ->paginate()->toArray();
             $message = "Titles of the choosed genre retrieved correctly.";
             $status_code = 1;

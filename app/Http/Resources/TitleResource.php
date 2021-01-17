@@ -15,6 +15,12 @@ class TitleResource extends JsonResource
      * @return array
      */
 
+    //adding language variable to constructor
+    function __construct($resource, $lang){
+        parent::__construct($resource);
+        $this->lang = $lang;
+    }
+
     public function genresArray()
     {
         $genres = [];
@@ -24,7 +30,7 @@ class TitleResource extends JsonResource
             {
                 array_push($genres, [
                     'genre_id' => $genre->id,
-                    'genre_title' =>  $translation->findTranslation($genre->name,"spa")
+                    'genre_title' =>  $translation->findTranslation($genre->name,$this->lang)
                 ]);
             }
         }
@@ -84,8 +90,8 @@ class TitleResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
-            'title' => $translation->findTranslation($this->title,"spa"),
-            'sinopsis' => $translation->findTranslation($this->sinopsis,"spa"),
+            'title' => $translation->findTranslation($this->title,$this->lang),
+            'sinopsis' => $translation->findTranslation($this->sinopsis,$this->lang),
             'cover_horizontal' => $this->cover_horizontal,
             'TMDB' => $this->tmdb_id,
             'genres' => $this->genresArray(),
