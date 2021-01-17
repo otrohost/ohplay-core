@@ -21,8 +21,8 @@ class TMDBApi extends Model
         foreach($languages as $language)
         {
             $content = $this->service($kind, $id, $language);
-            array_push($titles, $content['title']);
-            array_push($descriptions, $content['overview']);
+            array_push($titles, substr($content['title'], 0, 500));
+            array_push($descriptions, substr($content['overview'], 0, 500));
             $poster = $content['poster_path'];
             $backdrop = $content['backdrop_path'];
             $tmdb_id = $content['id'];
