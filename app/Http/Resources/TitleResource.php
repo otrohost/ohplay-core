@@ -15,14 +15,10 @@ class TitleResource extends JsonResource
      * @return array
      */
 
-    public function toArray($request)
+    public function genresArray()
     {
         $genres = [];
-        $people = [];
-        $contents = [];
-        $titlesmeta = [];
         $translation = new Translation();
-
         if(isset($this->genres)){
             foreach ($this->genres as $genre)
             {
@@ -32,7 +28,12 @@ class TitleResource extends JsonResource
                 ]);
             }
         }
-        
+        return $genres;
+    }
+
+    public function peopleArray()
+    {
+        $people = [];
         if(isset($this->people)){
             foreach ($this->people as $person)
             {
@@ -45,7 +46,12 @@ class TitleResource extends JsonResource
                 ]);
             }
         }
+        return $people;
+    }
 
+    public function contentsArray()
+    {
+        $contents = [];
         if(isset($this->contents)){
             foreach ($this->contents as $content)
             {
@@ -67,15 +73,13 @@ class TitleResource extends JsonResource
                 }
             }
         }
+        return $contents;
+    }
 
-        if(isset($this->meta)){
-            foreach ($this->meta as $meta)
-            {
-                array_push($titlesmeta, [
-                    $meta->meta_key => $meta->meta_value
-                ]);
-            }
-        }
+    public function toArray($request)
+    {
+        
+        $translation = new Translation();
 
         return [
             'id' => $this->id,
@@ -84,10 +88,9 @@ class TitleResource extends JsonResource
             'sinopsis' => $translation->findTranslation($this->sinopsis,"spa"),
             'cover_horizontal' => $this->cover_horizontal,
             'TMDB' => $this->tmdb_id,
-            'genres' => $genres,
-            'people' => $people,
-            'titles_meta' => $titlesmeta,
-            'contents' => $contents
+            'genres' => $this->genresArray(),
+            'people' => $this->peopleArray(),
+            'contents' => $this->contentsArray()
         ];
 
     }

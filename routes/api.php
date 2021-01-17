@@ -27,12 +27,11 @@ Route::resources([
 
 Route::get('/titles/genre/{genre_id}', [TitleController::class, 'indexAsGenre']);
 
-//404 routes
-Route::fallback([ApiController::class, 'notFound']);
-
 // Route::post('/users/login/', 'UserController@login');
 // Route::post('/users/logout/{id}', 'UserController@logout');
 // Route::put('/users/password/{email}', 'UserController@password');
 
+//404 routes
+Route::fallback([ApiController::class, 'notFound']);
 
 
