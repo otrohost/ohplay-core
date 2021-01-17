@@ -42,7 +42,22 @@ class TitleController extends ApiController
         }
         else
         {
-            return $this->errorResponse(400, $response['message']);
+            return $this->errorResponse($response['http_code'], $response['message']);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        $language = $this->language();
+        $title = new TitleCollection();
+        $response = $title->search($request['query'], $language);
+        if ($response['status_code'])
+        {
+            return $this->successResponse($response['response'], $response['message']);
+        }
+        else
+        {
+            return $this->errorResponse($response['http_code'], $response['message']);
         }
     }
 

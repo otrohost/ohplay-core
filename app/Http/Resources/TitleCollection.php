@@ -24,13 +24,16 @@ class TitleCollection
             ->paginate()->toArray();
             $message = "Titles retrieved correctly.";
             $status_code = 1;
+            $http_code = 200;
         } catch(\Illuminate\Database\QueryException $ex){ 
             $message = $ex->getMessage();
+            $http_code = 500;
             $status_code = 0;
             $response = [];
         }
 
         return [
+           'http_code' => $http_code,
            'status_code' => $status_code,
            'message' => $message,
            'response' => $response
@@ -51,17 +54,65 @@ class TitleCollection
             ->paginate()->toArray();
             $message = "Titles of the choosed genre retrieved correctly.";
             $status_code = 1;
+            $http_code = 200;
         } catch(\Illuminate\Database\QueryException $ex){ 
             $message = $ex->getMessage();
             $status_code = 0;
+            $http_code = 500;
             $response = [];
         }
 
         return [
+           'http_code' => $http_code,
            'status_code' => $status_code,
            'message' => $message,
            'response' => $response
         ];
     }
 
+    public function search($query, $language)
+    {
+        if(strlen($query) <= 3)
+        {
+            $message = "You must enter more than 3 characters";
+            $status_code = 0;
+            $response = [];
+            $http_code = 400;
+        }
+        else{
+            try {
+                $response = DB::table('titles')
+                ->inRandomOrder()
+                ->join('translations as title', 'titles.title', '=', 'title.id')
+                ->where('title.spa', 'like', '%'.$query.'%')
+                ->orWhere('title.eng', 'like', '%'.$query.'%')
+                ->orWhere('title.por', 'like', '%'.$query.'%')
+                ->select('titles.id', 'title.'.$language.' as title', 'cover_horizontal', 'cover_vertical')
+                ->paginate()->toArray();
+                $message = "Titles found with match";
+                $status_code = 1;
+                $http_code = 200;
+            } catch(\Illuminate\Database\QueryException $ex){ 
+                $message = $ex->getMessage();
+                $status_code = 0;
+                $http_code = 400;
+                $response = [];
+            }
+
+            if(empty($response['data']))
+            {
+                $message = "Any title was found";
+                $status_code = 0;
+                $response = [];
+                $http_code = 404;
+            }
+        }
+
+        return [
+           'status_code' => $status_code,
+           'http_code' => $http_code,
+           'message' => $message,
+           'response' => $response
+        ]; 
+    }
 }
