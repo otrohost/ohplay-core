@@ -8,26 +8,49 @@ use Http;
 
 class TMDBApi extends Model
 {
-    public function service($request, $id, $lang)
+    public function service($request, $lang)
     {
-        return Http::get(config('services.tmdb.url').''.$request.'/'.$id.'?api_key='.config('services.tmdb.token').'&language='.$lang.'')
+        return Http::get(config('services.tmdb.url').''.$request.'?api_key='.config('services.tmdb.token').'&language='.$lang.'')
         ->json();
     }
 
     public function title($id, $kind, $languages){
         $titles = [];
         $descriptions = [];
-        
+        $genres = [];
+        $request = "$kind/$id";
+        $content = "";
         foreach($languages as $language)
         {
-            $content = $this->service($kind, $id, $language);
-            array_push($titles, substr($content['title'], 0, 500));
+            $content = $this->service($request, $language);
+            if($kind == 'movie')
+            {
+                array_push($titles, substr($content['title'], 0, 500));
+                $year = explode('-', ''.$content['release_date'].'')[0];
+            }
+            else
+            {
+                array_push($titles, substr($content['name'], 0, 500));
+                $year = explode('-', ''.$content['first_air_date'].'')[0];
+            }
             array_push($descriptions, substr($content['overview'], 0, 500));
             $poster = $content['poster_path'];
             $backdrop = $content['backdrop_path'];
             $tmdb_id = $content['id'];
-            $genres = $content['genres'];
-            $year = explode('-', ''.$content['release_date'].'')[0];
+        }
+
+        //check which genres should be added
+        foreach($content['genres'] as $genre)
+        {
+            $id = $genre['id'];
+            $request = $this->service("genre/$id", $language);
+            if(isset($request['id']))
+            {
+                array_push($genres, [
+                    'id' => intval($genre['id'])
+                ]);
+            }
+            
         }
 
         return [
@@ -41,15 +64,36 @@ class TMDBApi extends Model
         ];
     }   
 
+    public function episode($id, $season, $episode, $languages)
+    {
+        $titles = [];
+        $descriptions = [];
+        $request = "tv/$id/season/$season/episode/$episode";
+
+        foreach($languages as $language)
+        {
+            $content = $this->service($request, $language);
+            array_push($titles, substr($content['name'], 0, 500));
+            array_push($descriptions, substr($content['overview'], 0, 500));
+            $image = $content['still_path'];
+        }
+
+        return [
+            "titles" => $titles,
+            "descriptions" => $descriptions,
+            "image" => $image
+            ];
+    }
+
     public function genre($id, $languages){
         $genres = [];
+        $request = "genre/$id";
         
         foreach($languages as $language)
         {
-            $content = $this->service('genre', $id, $language);
+            $content = $this->service($request, $language);
             array_push($genres, $content['name']);
         }
-
         return $genres;
     }   
 }
