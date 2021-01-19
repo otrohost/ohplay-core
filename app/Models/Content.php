@@ -50,7 +50,9 @@ class Content extends Model
             }
             else{
                 return [
-                    'message' => "This movie already has a content with the following id: ".$title->contents()->first()['id'].". Try editing it instead"
+                    'message' => "This movie already has a content with the following id: ".$title->contents()->first()['id'].". Try editing it instead",
+                    'status_code' => 0,
+                    'http_code' => 409
                 ];
             }
             
@@ -83,7 +85,9 @@ class Content extends Model
                         if($content_season == $season && $content_episode == $episode)
                         {
                             return [
-                                'message' => "The episode you're trying to add already exists"
+                                'message' => "The episode you're trying to add already exists",
+                                'status_code' => 0,
+                                'http_code' => 409
                             ];
                         }
                     }
@@ -112,10 +116,18 @@ class Content extends Model
                         ]));
                     }
                 }
+
+                return [
+                    'message' => "Content created successfully.",
+                    'status_code' => 1,
+                    'http_code' => 201
+                ];
             }
             else{
                 return [
-                    'message' => "Arguments missing"
+                    'message' => "Parameters missing. TV shows must include at least: tmdb_id of the parent title, season, episode and source.",
+                    'status_code' => 0,
+                    'http_code' => 400
                 ];
             }
         }

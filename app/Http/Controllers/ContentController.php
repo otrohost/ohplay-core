@@ -6,7 +6,7 @@ use App\Models\Content;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ContentController extends Controller
+class ContentController extends ApiController
 {
     /**
      * Store a newly created resource in storage.
@@ -17,7 +17,15 @@ class ContentController extends Controller
     public function store(Request $request)
     {
         $content = new Content();
-        return $content->saveContent($request);
+        $response = $content->saveContent($request);
+        if ($response['status_code'])
+        {
+            return $this->successResponse([], $response['message'], $response['http_code']);
+        }
+        else
+        {
+            return $this->errorResponse($response['http_code'], $response['message']);
+        }
     }
 
     /**
