@@ -21,7 +21,7 @@ class Content extends Model
 
     public function saveContent($data)
     {
-        $title = Title::where('tmdb_id', '=', $data['tmdb_parent'])->first();
+        $title = Title::where('tmdb_id', '=', $data['tmdb_id'])->first();
         $translation = new Translation();        
         $content_input = [];
 
@@ -32,15 +32,18 @@ class Content extends Model
                 $content_input['title'] = $title['title'];
                 $content_input['sinopsis'] = $title['sinopsis'];
                 $content_input['source'] = $data['source'];
-                $title->contents()->save(new Content($content_input));
+                $content = new Content($content_input);
+                $title->contents()->save($content);
                 if (count($data->all()) > 1)
                 {
-                    foreach($data as $data)
+                    foreach($data->all() as $key => $value)
                     {
-                        $key = key($data);
-                        if($key != 'title' || $key != 'sinopsis' || $key != 'source')
+                        if($key != 'source' && $key != 'tmdb_id')
                         {
-                            return ["something here"];
+                            $content->meta()->save(new ContentMeta([
+                                'meta_key' => $key,
+                                'meta_value' => $value
+                            ]));
                         }
                     }
                 }
