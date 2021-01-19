@@ -80,7 +80,7 @@ class TMDBApi extends Model
 
         return [
             "titles" => $titles,
-            "descriptions" => $descriptions,
+            "sinopsis" => $descriptions,
             "image" => $image
             ];
     }

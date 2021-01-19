@@ -58,6 +58,7 @@ class TitleResource extends JsonResource
     public function contentsArray()
     {
         $contents = [];
+        $translation = new Translation();
         if(isset($this->contents)){
             foreach ($this->contents as $content)
             {
@@ -74,6 +75,8 @@ class TitleResource extends JsonResource
                     array_push($contents, [
                         'content_id' => $content->id,
                         'content_uri' => $content->source,
+                        'title' => $translation->findTranslation($content->title,$this->lang),
+                        'sinopsis' => $translation->findTranslation($content->sinopsis,$this->lang),
                         'contents_meta' => $contentsmeta
                     ]);
                 }
@@ -92,6 +95,7 @@ class TitleResource extends JsonResource
             'type' => $this->type,
             'title' => $translation->findTranslation($this->title,$this->lang),
             'sinopsis' => $translation->findTranslation($this->sinopsis,$this->lang),
+            'cover_vertical' => $this->cover_vertical,
             'cover_horizontal' => $this->cover_horizontal,
             'TMDB' => $this->tmdb_id,
             'genres' => $this->genresArray(),
