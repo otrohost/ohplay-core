@@ -22,11 +22,19 @@ class Content extends Model
     public function saveContent($data)
     {
         $title = Title::where('tmdb_id', '=', $data['tmdb_id'])->first();
-        $content_input = [];
-        
         if($title['type'] == "movie")
         {
-            $var = $title->contents();
+            return $this->createMovieContent($data, $title);
+        }
+        elseif ($title['type'] == "tv")
+        {
+            return $this->createTVContent($data, $title);
+        }
+    }
+
+    public function createMovieContent($data, $title)
+    {
+        $content_input = [];
             if(!$title->contents()->exists())
             {
                 $content_input['title'] = $title['title'];
@@ -47,6 +55,11 @@ class Content extends Model
                         }
                     }
                 }
+                return [
+                    'message' => "Content added successfully",
+                    'status_code' => 1,
+                    'http_code' => 201
+                ];
             }
             else{
                 return [
@@ -55,43 +68,20 @@ class Content extends Model
                     'http_code' => 409
                 ];
             }
-            
-        }
-        elseif ($title['type'] == "tv")
+    }
+
+    public function createTVContent($data, $title)
+    {
+        $content_input = [];
+        if(isset($data["season"]) && isset($data["episode"]) && isset($data["source"]))
         {
-            if(isset($data["season"]) && isset($data["episode"]) && isset($data["source"]))
+            $season = $data["season"];
+            $episode = $data["episode"];
+            $languages = ['es', 'en', 'pt'];
+            $episodeExists = $this->episodeExists($title, $season, $episode);
+            
+            if(!$episodeExists)
             {
-                $season = $data["season"];
-                $episode = $data["episode"];
-                $languages = ['es', 'en', 'pt'];
-                if($title->contents()->exists())
-                {
-                    $contents = $title->contents()->with('meta')->get();
-                    foreach($contents as $content)
-                    {   
-                        
-                        foreach ($content['meta'] as $content_meta)
-                        {
-                            if($content_meta['meta_key'] == "season")
-                            {
-                                $content_season = $content_meta['meta_value'];
-                            }
-                            elseif($content_meta['meta_key'] == "episode")
-                            {
-                                $content_episode = $content_meta['meta_value'];
-                            }
-                        }
-                        
-                        if($content_season == $season && $content_episode == $episode)
-                        {
-                            return [
-                                'message' => "The episode you're trying to add already exists",
-                                'status_code' => 0,
-                                'http_code' => 409
-                            ];
-                        }
-                    }
-                }
                 $translation = new Translation();
                 $tmdbapi = new TMDBApi();
                 $episode_info = $tmdbapi->episode($data["tmdb_id"], $data["season"], $data["episode"], $languages);
@@ -116,20 +106,52 @@ class Content extends Model
                         ]));
                     }
                 }
-
-                return [
-                    'message' => "Content created successfully.",
-                    'status_code' => 1,
-                    'http_code' => 201
-                ];
+                return $this->responseHandler(1, 201, "Content created successfully.");     
             }
-            else{
-                return [
-                    'message' => "Parameters missing. TV shows must include at least: tmdb_id of the parent title, season, episode and source.",
-                    'status_code' => 0,
-                    'http_code' => 400
-                ];
+            else
+            {
+                return $this->responseHandler(0, 409, "The episode you're trying to add already exists.");
             }
         }
+        else{
+            return $this->responseHandler(0, 400, "Parameters missing. TV shows must include at least: tmdb_id of the parent title, season, episode and source.");
+        }
+    }
+
+    public function episodeExists($title, $season, $episode)
+    {
+        if($title->contents()->exists())
+        {
+            $contents = $title->contents()->with('meta')->get();
+            foreach($contents as $content)
+            {   
+                
+                foreach ($content['meta'] as $content_meta)
+                {
+                    if($content_meta['meta_key'] == "season")
+                    {
+                        $content_season = $content_meta['meta_value'];
+                    }
+                    elseif($content_meta['meta_key'] == "episode")
+                    {
+                        $content_episode = $content_meta['meta_value'];
+                    }
+                }
+                
+                if($content_season == $season && $content_episode == $episode)
+                {
+                    return true;
+                }
+            }
+        } 
+    }
+
+    public function responseHandler($status_code, $http_code, $message)
+    {
+        return [
+            'message' => $message,
+            'status_code' => $status_code,
+            'http_code' => $http_code
+        ];
     }
 }
