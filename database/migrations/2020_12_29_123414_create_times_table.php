@@ -15,8 +15,8 @@ class CreateTimesTable extends Migration
     {
         Schema::create('times', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_id')->constrained();
-            $table->foreignId('content_id')->constrained();
+            $table->foreignId('profile_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('content_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->integer('index');
             $table->integer('time');
             $table->integer('duration');

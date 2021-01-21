@@ -15,7 +15,7 @@ class CreateContentMetaTable extends Migration
     {
         Schema::create('content_meta', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('content_id')->constrained();
+            $table->foreignId('content_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('meta_key');
             $table->string('meta_value');
             $table->timestamps();

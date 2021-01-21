@@ -15,7 +15,7 @@ class CreateContentsTable extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('title_id')->constrained();
+            $table->foreignId('title_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('title');
             $table->foreign('title')->references('id')->on('translations');
             $table->unsignedBigInteger('sinopsis');

@@ -18,7 +18,7 @@ class CreatePeopleTable extends Migration
             $table->integer('tmdb_id');
             $table->string('name');
             $table->unsignedBigInteger('role');
-            $table->foreign('role')->references('id')->on('translations');
+            $table->foreign('role')->references('id')->on('translations')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->string('img');
             $table->timestamps();
         });

@@ -15,8 +15,8 @@ class CreateTitlesPeopleTable extends Migration
     {
         Schema::create('titles_people', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('person_id')->constrained();
-            $table->foreignId('title_id')->constrained();
+            $table->foreignId('person_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('title_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

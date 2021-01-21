@@ -93,17 +93,37 @@ class Title extends Model
     {
         $title = $this->existsTitle($tmdb_id);
         $translation = new Translation();
+        $translations = [];
 
         //comprove if title exists before deleting
         if($title)
         {
+            //save title translations
+            array_push($translations, $title['title']);
+            array_push($translations, $title['sinopsis']);
+
+            //save contents translations
+            $contents = $title->contents()->get();
+            if(isset($contents[0]))
+            {
+                foreach($contents as $content)
+                {
+                    array_push($translations, $content['title']);
+                    array_push($translations, $content['sinopsis']);
+                }
+            }
+
             //remove title and genre relations
-            $title->genres()->detach();
             $title->delete();
 
             //remove translations
-            $translation->removeTranslation($title['title']);
-            $translation->removeTranslation($title['sinopsis']);
+            if(isset($translations[0]))
+            {
+                foreach($translations as $translation_id)
+                {
+                    $translation->removeTranslation($translation_id);
+                }
+            }
             
             $status_code = 1;
             $http_code = 200;
