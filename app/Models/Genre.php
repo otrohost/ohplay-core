@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Genre extends Model
 {
     protected $fillable = ['tmdb_id', 'name'];  
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function titles()
     {
@@ -16,7 +17,7 @@ class Genre extends Model
 
     public function translations()
     {
-        return $this->hasMany(Translation::class);
+        return $this->hasMany(Translation::class, 'id', 'name');
     }
 
     public function findOrCreateGenre($tmdb_id, $languages)
