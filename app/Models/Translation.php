@@ -8,21 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class Translation extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['spa', 'eng', 'por'];
 
     public function findTranslation($id, $lang)
     {
         return Translation::find($id)->$lang;
     }
 
-    public function createTranslation($languages)
+    public function createTranslation($strings)
     {
+        $languages = explode(",",config('services.languages.available'));
+
+        $translations = [];
+
+        foreach ($strings as $key => $value)
+        {
+            $translations[$languages[$key]] = $value;
+        }
+
+        Translation::unguard();
+
         $translation = Translation::create(
-            [
-                'spa' => $languages[0],
-                'eng' => $languages[1],
-                'por' => $languages[2]
-            ]
+            $translations
         );
 
         return $translation->id;

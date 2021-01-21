@@ -16,7 +16,7 @@ class ApiController extends Controller
 
     public function language()
     {
-        $languages = ["spa", "eng", "por"];
+        $languages = explode(",",config('services.languages.available'));
         $lang = isset($_GET['lang']) ? $_GET['lang'] : $languages[0];
         if(in_array($lang, $languages))
         {

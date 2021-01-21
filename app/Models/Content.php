@@ -77,7 +77,8 @@ class Content extends Model
         {
             $season = $data["season"];
             $episode = $data["episode"];
-            $languages = ['es', 'en', 'pt'];
+            //get languages from the env file
+            $languages = explode(",",config('services.languages.available'));
             $episodeExists = $this->episodeExists($title, $season, $episode);
             
             if(!$episodeExists)

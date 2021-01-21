@@ -35,4 +35,8 @@ return [
         'url' => env('TMDB_URL')
     ],
 
+    'languages' => [
+        'available' => env('LANGUAGES_AVAILABLE')
+    ],
+
 ];

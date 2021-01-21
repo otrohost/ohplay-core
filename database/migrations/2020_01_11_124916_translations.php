@@ -13,11 +13,14 @@ class Translations extends Migration
      */
     public function up()
     {
-        Schema::create('translations', function (Blueprint $table) {
+        $translations = explode(",",config('services.languages.available'));
+
+        Schema::create('translations', function (Blueprint $table) use($translations) {
             $table->id();
-            $table->string('spa', 500);
-            $table->string('eng', 500);
-            $table->string('por', 500);
+            foreach ($translations as $translation)
+            {
+                $table->string($translation, 500);
+            }
         });
     }
 

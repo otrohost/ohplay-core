@@ -44,7 +44,8 @@ class Title extends Model
         $genre = new Genre();
         $tmdb_api = new TMDBAPI();
 
-        $languages = ["es", "en", "pt"];
+        //get languages from env file
+        $languages = explode(",",config('services.languages.available'));
 
         $title = $this->existsTitle($tmdb_id);
 
