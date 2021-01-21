@@ -39,4 +39,7 @@ return [
         'available' => env('LANGUAGES_AVAILABLE')
     ],
 
+    'bunny' => [
+        'bucket1' => env('BUNNY_BUCKET1')
+    ],
 ];

@@ -74,7 +74,7 @@ class TitleResource extends JsonResource
 
                     array_push($contents, [
                         'content_id' => $content->id,
-                        'content_uri' => $content->source,
+                        'content_uri' => config('services.bunny.bucket1').$content->source,
                         'title' => $translation->findTranslation($content->title,$this->lang),
                         'sinopsis' => $translation->findTranslation($content->sinopsis,$this->lang),
                         'contents_meta' => $contentsmeta
