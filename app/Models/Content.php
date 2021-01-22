@@ -73,49 +73,43 @@ class Content extends Model
     public function createTVContent($data, $title)
     {
         $content_input = [];
-        if(isset($data["season"]) && isset($data["episode"]) && isset($data["source"]))
+        $season = $data["season"];
+        $episode = $data["episode"];
+        //get languages from the env file
+        $languages = explode(",",config('services.languages.available'));
+        $episodeExists = $this->episodeExists($title, $season, $episode);
+        
+        if(!$episodeExists)
         {
-            $season = $data["season"];
-            $episode = $data["episode"];
-            //get languages from the env file
-            $languages = explode(",",config('services.languages.available'));
-            $episodeExists = $this->episodeExists($title, $season, $episode);
-            
-            if(!$episodeExists)
+            $translation = new Translation();
+            $tmdbapi = new TMDBApi();
+            $episode_info = $tmdbapi->episode($data["tmdb_id"], $data["season"], $data["episode"], $languages);
+            $content_input['title'] = $translation->createTranslation($episode_info['titles']);
+            $content_input['sinopsis'] = $translation->createTranslation($episode_info['sinopsis']);
+            $content_input['source'] = $data["source"];
+
+            $content = new Content($content_input);
+            $title->contents()->save($content);
+
+            $meta_add = $data->all();
+
+            $meta_add['thumbnail'] = $episode_info['image'];
+
+            foreach($meta_add as $key => $value)
             {
-                $translation = new Translation();
-                $tmdbapi = new TMDBApi();
-                $episode_info = $tmdbapi->episode($data["tmdb_id"], $data["season"], $data["episode"], $languages);
-                $content_input['title'] = $translation->createTranslation($episode_info['titles']);
-                $content_input['sinopsis'] = $translation->createTranslation($episode_info['sinopsis']);
-                $content_input['source'] = $data["source"];
-
-                $content = new Content($content_input);
-                $title->contents()->save($content);
-
-                $meta_add = $data->all();
-
-                $meta_add['thumbnail'] = $episode_info['image'];
-
-                foreach($meta_add as $key => $value)
+                if($key != 'source' && $key != 'tmdb_id')
                 {
-                    if($key != 'source' && $key != 'tmdb_id')
-                    {
-                        $content->meta()->save(new ContentMeta([
-                            'meta_key' => $key,
-                            'meta_value' => $value
-                        ]));
-                    }
+                    $content->meta()->save(new ContentMeta([
+                        'meta_key' => $key,
+                        'meta_value' => $value
+                    ]));
                 }
-                return $this->responseHandler(1, 201, "Content created successfully.");     
             }
-            else
-            {
-                return $this->responseHandler(0, 409, "The episode you're trying to add already exists.");
-            }
+            return $this->responseHandler(1, 201, "Content created successfully.");     
         }
-        else{
-            return $this->responseHandler(0, 400, "Parameters missing. TV shows must include at least: tmdb_id of the parent title, season, episode and source.");
+        else
+        {
+            return $this->responseHandler(0, 409, "The episode you're trying to add already exists.");
         }
     }
 

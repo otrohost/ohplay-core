@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TMDBApi;
 use DB;
 
 class Title extends Model
@@ -60,26 +61,36 @@ class Title extends Model
         {
             //obtain data from TMDB
             $tmdb_content = $tmdb_api->title($tmdb_id, $type, $languages);
-            $genres = $tmdb_content['genres'];
-            $title = Title::create(
-                [
-                    'title' => $translation->createTranslation($tmdb_content["titles"]),
-                    'sinopsis' => $translation->createTranslation($tmdb_content["descriptions"]),
-                    'tmdb_id' => $tmdb_content["tmdb_id"],
-                    'year' => $tmdb_content["year"],
-                    'cover_horizontal' => $tmdb_content["backdrop"],
-                    'cover_vertical' => $tmdb_content["poster"],
-                    'type' => $type
-                ]
-            );
-            //comprove if the genres of the title exists on the database. If not, create them.
-            foreach($genres as $genre_tmdb)
-            {   
-                $title->genres()->save($genre->findOrCreateGenre($genre_tmdb['id'], $languages));
+
+            if($tmdb_content)
+            {
+                $genres = $tmdb_content['genres'];
+                $title = Title::create(
+                    [
+                        'title' => $translation->createTranslation($tmdb_content["titles"]),
+                        'sinopsis' => $translation->createTranslation($tmdb_content["descriptions"]),
+                        'tmdb_id' => $tmdb_content["tmdb_id"],
+                        'year' => $tmdb_content["year"],
+                        'cover_horizontal' => $tmdb_content["backdrop"],
+                        'cover_vertical' => $tmdb_content["poster"],
+                        'type' => $type
+                    ]
+                );
+                //comprove if the genres of the title exists on the database. If not, create them.
+                foreach($genres as $genre_tmdb)
+                {   
+                    $title->genres()->save($genre->findOrCreateGenre($genre_tmdb['id'], $languages));
+                }
+                $status_code = 1;
+                $http_code = 201;
+                $message = "The title has been created";
+            } 
+            else
+            {
+                $status_code = 0;
+                $http_code = 404;
+                $message = "The title you're trying to create doen't exist on TMDB";
             }
-            $status_code = 1;
-            $http_code = 201;
-            $message = "The title has been created";
         }
         
         return [

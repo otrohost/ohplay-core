@@ -69,8 +69,18 @@ class TitleController extends ApiController
      */
     public function store(Request $request)
     {
-        $title = new Title();
-        $response = $title->saveTitle($request["tmdb_id"], $request["type"]);
+        if(isset($request['tmdb_id']) && isset($request['type']))
+        {
+            $title = new Title();
+            $response = $title->saveTitle($request["tmdb_id"], $request["type"]);
+        }
+        else
+        {
+            $response['status_code'] = 0;
+            $response['http_code'] = 400;
+            $response['message'] = "Parameters missing. In order to create a new title, 'tmdb_id' and 'type' must be defined.";
+        }
+        
 
         if ($response['status_code'])
         {
