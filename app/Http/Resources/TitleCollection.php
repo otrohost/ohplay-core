@@ -84,9 +84,9 @@ class TitleCollection
                 $response = DB::table('titles')
                 ->inRandomOrder()
                 ->join('translations as title', 'titles.title', '=', 'title.id')
-                ->where('title.spa', 'like', '%'.$query.'%')
-                ->orWhere('title.eng', 'like', '%'.$query.'%')
-                ->orWhere('title.por', 'like', '%'.$query.'%')
+                ->where('title.es', 'like', '%'.$query.'%')
+                ->orWhere('title.en', 'like', '%'.$query.'%')
+                ->orWhere('title.pt', 'like', '%'.$query.'%')
                 ->select('titles.id', 'title.'.$language.' as title', 'cover_horizontal', 'cover_vertical')
                 ->paginate()->toArray();
                 $message = "Titles found with match";
