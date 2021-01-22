@@ -16,7 +16,7 @@ class ContentController extends ApiController
      */
     public function store(Request $request)
     {
-        if(isset($request["tmdb_id"]) && isset($request["season"]) && isset($request["episode"]) && isset($request["source"]))
+        if(isset($request["tmdb_id"]) && isset($request["source"]))
         {
             $content = new Content();
             $response = $content->saveContent($request);
@@ -25,7 +25,7 @@ class ContentController extends ApiController
         {
             $response['status_code'] = 0;
             $response['http_code'] = 400;
-            $response['message'] = "Parameters missing. TV shows must include at least: 'tmdb_id' of the parent title, 'season', 'episode' and 'source'.";
+            $response['message'] = "Parameters missing: 'tmdb_id' and 'source' are required.";
         }
         
         if ($response['status_code'])

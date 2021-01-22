@@ -28,7 +28,18 @@ class Content extends Model
         }
         elseif ($title['type'] == "tv")
         {
-            return $this->createTVContent($data, $title);
+            if( isset($data["season"]) && isset($data["episode"]) )
+            {
+                return $this->createTVContent($data, $title);
+            }
+            else{
+                return [
+                    'message' => "Parameters missing. TV Shows require 'season' and 'episode'.",
+                    'status_code' => 0,
+                    'http_code' => 409
+                ];
+            }
+            
         }
     }
 
