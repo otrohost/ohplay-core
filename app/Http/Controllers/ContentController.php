@@ -16,8 +16,18 @@ class ContentController extends ApiController
      */
     public function store(Request $request)
     {
-        $content = new Content();
-        $response = $content->saveContent($request);
+        if(isset($request["tmdb_id"]) && isset($request["season"]) && isset($request["episode"]) && isset($request["source"]))
+        {
+            $content = new Content();
+            $response = $content->saveContent($request);
+        }
+        else
+        {
+            $response['status_code'] = 0;
+            $response['http_code'] = 400;
+            $response['message'] = "Parameters missing. TV shows must include at least: 'tmdb_id' of the parent title, 'season', 'episode' and 'source'.";
+        }
+        
         if ($response['status_code'])
         {
             return $this->successResponse([], $response['message'], $response['http_code']);
@@ -35,17 +45,6 @@ class ContentController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

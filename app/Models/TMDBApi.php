@@ -10,8 +10,17 @@ class TMDBApi extends Model
 {
     public function service($request, $lang)
     {
-        return Http::get(config('services.tmdb.url').''.$request.'?api_key='.config('services.tmdb.token').'&language='.$lang.'')
+        $response = Http::get(config('services.tmdb.url').''.$request.'?api_key='.config('services.tmdb.token').'&language='.$lang.'')
         ->json();
+
+        //check if title exists on TMDB
+        if(isset($response['status_code']))
+        {
+            return 0;
+        }
+        else{
+            return $response;
+        }
     }
 
     public function title($id, $kind, $languages){
@@ -22,7 +31,14 @@ class TMDBApi extends Model
         $content = "";
         foreach($languages as $language)
         {
-            $content = $this->service($request, $language);
+            $content = $this->service($request, $language);       
+            
+            //returning false response if movie doesn't exist in TMDB
+            if(!$content)
+            {
+                return 0;
+            }
+            
             if($kind == 'movie')
             {
                 array_push($titles, substr($content['title'], 0, 500));
@@ -73,6 +89,13 @@ class TMDBApi extends Model
         foreach($languages as $language)
         {
             $content = $this->service($request, $language);
+
+            //returning false response if tv show doesn't exist in TMDB
+            if(!$content)
+            {
+                return 0;
+            }
+
             array_push($titles, substr($content['name'], 0, 500));
             array_push($descriptions, substr($content['overview'], 0, 500));
             $image = $content['still_path'];
