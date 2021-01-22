@@ -20,9 +20,9 @@ class CreateTitlesTable extends Migration
             $table->unsignedBigInteger('sinopsis');
             $table->foreign('sinopsis')->references('id')->on('translations');
             $table->integer('tmdb_id');
-            $table->integer('year');
-            $table->string('cover_horizontal', 200);
-            $table->string('cover_vertical', 200);
+            $table->integer('year')->nullable();
+            $table->string('cover_horizontal', 200)->nullable();
+            $table->string('cover_vertical', 200)->nullable();
             $table->string('type', 10);
             $table->timestamps();
         });

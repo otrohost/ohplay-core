@@ -19,7 +19,7 @@ class Translations extends Migration
             $table->id();
             foreach ($translations as $translation)
             {
-                $table->string($translation, 500);
+                $table->string($translation, 500)->nullable();
             }
         });
     }

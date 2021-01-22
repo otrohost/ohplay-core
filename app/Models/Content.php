@@ -93,7 +93,12 @@ class Content extends Model
 
             $meta_add = $data->all();
 
-            $meta_add['thumbnail'] = $episode_info['image'];
+            //check if thumbnail exists before adding it
+            if(!empty($episode_info['image']))
+            {
+                $meta_add['thumbnail'] = $episode_info['image'];
+            }
+            
 
             foreach($meta_add as $key => $value)
             {
