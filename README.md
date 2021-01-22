@@ -20,10 +20,10 @@ While OhPlay Core isn't a fully REST API per se, tries to pursue the enforcement
 
 ### **Path parameteres**
 
-|path |type| required | default
-|-----|--------|-----|-----|
-|page |int| no| 1
-|lang |string| no| es
+|path |type| description| required | default
+|-----|--------|-----|-----|-----|
+|page |int|# of page | no| 1
+|lang |string|language: es, en, pt| no| es
 
 
 ### **Example**
@@ -93,10 +93,10 @@ Will retrieve:
 
 ### **Path parameteres**
 
-|path |type| required | default
-|-----|--------|-----|-----|
-|page |int| no| 1
-|lang |string| no| es
+|path |type| description| required | default
+|-----|--------|-----|-----|-----|
+|page |int|# of page | no| 1
+|lang |string|language: es, en, pt| no| es
 
 ### **Example**
 
@@ -161,9 +161,9 @@ Will retrieve:
 
 ### **Path parameteres**
 
-|path |type| required | default
-|-----|--------|-----|-----|
-|lang |string| no| es
+|path |type| description | required | default
+|-----|--------|-----|-----|-----|
+|lang |string|language: es, en, pt| no| es
 
 ### **Example**
 
@@ -215,17 +215,16 @@ Will have as response:
 
 ### **Post parameteres**
 
-|parameter |type| required 
-|-----|--------|-----
-|query |string| yes
+|parameter |description |type| required 
+|-----|--------|-----|-----
+|query |search term |string| yes
 
 ### **Query parameteres**
 
-|parameter |type| required | default 
-|-----|--------|-----|-----
-|lang |string| no| es
-|page |int| no| 1
-
+|path |type| description| required | default
+|-----|--------|-----|-----|-----|
+|page |int|# of page | no| 1
+|lang |string|language: es, en, pt| no| es
 ### **Example**
 
     POST https://api.ohplay.tv/api/titles/search?lang=es
@@ -288,10 +287,10 @@ WIll have as response:
 
 ### **Post parameteres**
 
-|parameter |type| required 
-|-----|--------|-----
-|tmdb_id |int| yes
-|type |string: movie/tv| yes
+|parameter | description |type| required 
+|-----|--------|-----|-----
+|tmdb_id |TMDB of the title |int| yes
+|type |movie/tv|string| yes
 
 ### **Example**
 
@@ -322,9 +321,9 @@ Will delete the TV Show identified with the TMDB id 1399.
 
 ### **Path parameteres**
 
-|path |type| required | default
-|-----|--------|-----|-----|
-|lang |string| no| es
+|path |type| description | required | default
+|-----|--------|-----|-----|-----|
+|lang |string| language: es, en, pt|no| es
 
 
 ### **Example**
