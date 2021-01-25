@@ -11,7 +11,7 @@ class Person extends Model
 
     public function titles()
     {
-        return $this->belongsToMany(Title::class, 'titles_people')->withPivot('person_id', 'title_id');
+        return $this->belongsToMany(Title::class)->withPivot('role', 'character');
     }
 
     public function translations()

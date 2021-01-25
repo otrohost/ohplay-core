@@ -17,7 +17,8 @@ class CreateTitlesPeopleTable extends Migration
             $table->id();
             $table->foreignId('person_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('title_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
-            $table->timestamps();
+            $table->string('role');
+            $table->string('character');
         });
     }
 
