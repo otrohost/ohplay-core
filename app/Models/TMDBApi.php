@@ -8,7 +8,7 @@ use Http;
 
 class TMDBApi extends Model
 {
-    public function service($request, $lang)
+    public function service($request, $lang = "en")
     {
         $response = Http::get(config('services.tmdb.url').''.$request.'?api_key='.config('services.tmdb.token').'&language='.$lang.'')
         ->json();
@@ -27,8 +27,9 @@ class TMDBApi extends Model
         $titles = [];
         $descriptions = [];
         $genres = [];
+        $people = [];
         $request = "$kind/$id";
-        $content = "";
+        
         foreach($languages as $language)
         {
             $content = $this->service($request, $language);       
@@ -55,20 +56,22 @@ class TMDBApi extends Model
             $tmdb_id = $content['id'];
         }
 
-        //check which genres should be added
+        //check if genres are common to both TV Shows and Movies
         foreach($content['genres'] as $genre)
         {
-            $id = $genre['id'];
-            $request = $this->service("genre/$id", $language);
+            $genre_id = $genre['id'];
+            $request = $this->service("genre/$genre_id");
             if(isset($request['id']))
             {
                 array_push($genres, [
                     'id' => intval($genre['id'])
                 ]);
             }
-            
         }
 
+        //add people
+        $people = $this->service("$kind/$id/credits")['crew'];
+        
         return [
         "titles" => $titles,
         "descriptions" => $descriptions,
@@ -76,7 +79,8 @@ class TMDBApi extends Model
         "year" => $year,
         "backdrop" => $backdrop,
         "poster" => $poster,
-        "genres" => $genres
+        "genres" => $genres,
+        "people" => $people
         ];
     }   
 
@@ -118,5 +122,10 @@ class TMDBApi extends Model
             array_push($genres, $content['name']);
         }
         return $genres;
+    }   
+
+    public function person($id){
+        $request = "person/$id";
+        return $this->service($request, 'en')['name'];
     }   
 }

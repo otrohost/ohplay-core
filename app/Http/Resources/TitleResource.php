@@ -47,7 +47,7 @@ class TitleResource extends JsonResource
                     'person_id' => $person->id,
                     'person_tmdbid' => $person->tmdb_id,
                     'person_name' =>  $person->name,
-                    "person_role" => $person->role,
+                    "person_role" => $person->pivot->role,
                     'person_image' =>  $person->img
                 ]);
             }

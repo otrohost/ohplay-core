@@ -24,7 +24,7 @@ class Title extends Model
 
     public function people()
     {
-        return $this->belongsToMany(Person::class, 'titles_people')->withPivot('title_id', 'person_id');
+        return $this->belongsToMany(Person::class, 'titles_people')->withPivot('title_id', 'person_id', 'role');
     }
 
     public function existsTitle($id)
@@ -43,6 +43,7 @@ class Title extends Model
     {
         $translation = new Translation();
         $genre = new Genre();
+        $person = new Person();
         $tmdb_api = new TMDBAPI();
 
         //get languages from env file
@@ -59,12 +60,13 @@ class Title extends Model
         }
         else
         {
-            //obtain data from TMDB
+            //get data from TMDB
             $tmdb_content = $tmdb_api->title($tmdb_id, $type, $languages);
 
             if($tmdb_content)
             {
                 $genres = $tmdb_content['genres'];
+                $people = $tmdb_content['people'];
                 $title = Title::create(
                     [
                         'title' => $translation->createTranslation($tmdb_content["titles"]),
@@ -76,11 +78,19 @@ class Title extends Model
                         'type' => $type
                     ]
                 );
-                //comprove if the genres of the title exists on the database. If not, create them.
+                //check if genres of the title exists on the database. If not, create them.
                 foreach($genres as $genre_tmdb)
                 {   
                     $title->genres()->save($genre->findOrCreateGenre($genre_tmdb['id'], $languages));
                 }
+
+                //check if people exists on the database. If not, create them.
+                foreach($people as $person_tmdb)
+                {   
+                    $findOrCreatePerson = $person->findOrCreatePerson($person_tmdb['id'], $person_tmdb['profile_path']);
+                    $title->people()->save($findOrCreatePerson, ['role' => $person_tmdb['job']]);
+                }
+
                 $status_code = 1;
                 $http_code = 201;
                 $message = "The title has been created";

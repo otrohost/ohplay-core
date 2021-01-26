@@ -23,6 +23,7 @@ class Genre extends Model
     public function findOrCreateGenre($tmdb_id, $languages)
     {
         $genre = Genre::where('tmdb_id', '=', $tmdb_id)->first();
+
         if ($genre !== null)
         {
             return $genre;
