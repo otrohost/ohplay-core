@@ -88,7 +88,7 @@ class Title extends Model
                 foreach($people as $person_tmdb)
                 {   
                     $findOrCreatePerson = $person->findOrCreatePerson($person_tmdb['id'], $person_tmdb['profile_path']);
-                    $title->people()->save($findOrCreatePerson, ['role' => $person_tmdb['job']]);
+                    $title->people()->save($findOrCreatePerson, ['role' => isset($person_tmdb['job']) ? $person_tmdb['job'] : 'Actor']);
                 }
 
                 $status_code = 1;

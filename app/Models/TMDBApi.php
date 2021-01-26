@@ -70,7 +70,17 @@ class TMDBApi extends Model
         }
 
         //add people
-        $people = $this->service("$kind/$id/credits")['crew'];
+        $crew = $this->service("$kind/$id/credits")['crew'];
+        $cast = $this->service("$kind/$id/credits")['cast'];
+
+        foreach($crew as $person)
+        {
+            if($person['job'] == "Executive Producer" || $person['job'] == "Director")
+            {
+                array_push($people, $person);
+            }
+        }
+        $people = array_merge($people, $cast);
         
         return [
         "titles" => $titles,
